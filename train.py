@@ -4,6 +4,9 @@ import datetime
 import os
 import logging
 import tqdm
+import wandb
+
+import numpy as np
 
 import torch
 from torch import nn
@@ -15,7 +18,7 @@ from model import *
 
 def set_random_seed(seed=0):
     random.seed(seed)
-    # np.random.seed(seed)
+    np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
@@ -23,20 +26,10 @@ def set_random_seed(seed=0):
 
 def train(args):
 
-    # 设置日志名和路径名
-    name = f'batchsize{args.batch_size}_epochs{args.epochs}_cuda{args.cuda}_lr{args.lr}_seed{args.seed}'
-    current_time = datetime.datetime.now()
-    log_path = os.path.join('log', 'task1', name)
-    checkpoint_path = os.path.join('checkpoint', 'task1', name)
-
-    # 创建保存日志和模型的路径
-    os.makedirs(log_path, exist_ok=True)
-    os.makedirs(checkpoint_path, exist_ok=True)
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S',
-                        filename=os.path.join(log_path, f'{current_time.strftime("%Y_%m_%d_%H_%M_%S")}.txt'),
-                        filemode='w')
+    # 设置wandb
+    wandb.init(project='Kaggle: Classify Leaves', config=args)
+    wandb.run.name = 'ResNet'
+    wandb.run.save()
 
     # 加载训练集
     dataset_train = Trainset()
@@ -53,7 +46,7 @@ def train(args):
     criterion = nn.CrossEntropyLoss()
 
     # 训练循环
-    for epoch in tqdm(range(args.num_epochs)):
+    for epoch_id in tqdm(range(args.num_epochs)):
 
         # 训练模式
         model.train()
@@ -74,17 +67,15 @@ def train(args):
             optimizer.step()
 
             running_loss += loss.item()
+            
+            step = epoch_id * len(dataloader_train) + 
 
-        # 日志记录
-        logging.info(f'epoch: {epoch}, loss: {running_loss/len(dataloader_train):.4f}')
-
-        # 保存模型
-        torch.save(model.state_dict(), os.path.join(checkpoint_path, f'{current_time.strftime("%Y_%m_%d_%H_%M_%S")}.pth'))
+        
 
 if __name__ == '__main__':
 
+    # 设置参数
     parser = argparse.ArgumentParser()
-    parser.add_argument('--num_classes', type=int, default=176)
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--epochs', type=int, default=100)
     parser.add_argument('--num_workers', type=int, default=2)
