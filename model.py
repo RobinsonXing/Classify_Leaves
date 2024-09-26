@@ -6,7 +6,7 @@ class ResNetClassifier(nn.Module):
 
     def __init__(self, num_calsses):
         super(ResNetClassifier, self).__init__()
-        self.resnet = models.resnet18(pretrain=True)
+        self.resnet = models.resnet18()
         self.resnet.fc = nn.Linear(512, num_calsses)
     
     def forward(self, x):
