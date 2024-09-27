@@ -31,13 +31,13 @@ class LeavesDataset(Dataset):
         # 按mode加载数据
         self.mode = mode
         if self.mode == 'train':
-            self.image_arr = np.asarray(self.data.iloc[:train_len, 0])
-            self.label_arr = np.asarray(self.data.iloc[:train_len, 1])
+            self.image_arr = np.asarray(self.data.iloc[1:train_len, 0])
+            self.label_arr = np.asarray(self.data.iloc[1:train_len, 1])
         elif self.mode == 'valid':
             self.image_arr = np.asarray(self.data.iloc[train_len:, 0])
             self.label_arr = np.asarray(self.data.iloc[train_len:, 1])
         elif self.mode == 'test':
-            self.image_arr = np.asarray(self.data.iloc[:, 0])
+            self.image_arr = np.asarray(self.data.iloc[1:, 0])
             self.label_arr = None
         
         # 测试打印
