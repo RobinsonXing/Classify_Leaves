@@ -5,7 +5,7 @@ from torchvision import models
 
 # customized model
 
-def ResNet_custom(input_channels, num_classes):
+def get_custom_ResNet(input_channels, num_classes):
     """ResNet18"""
     class Residual(nn.Module):
         def __init__(self, input_channels, num_channels, strides=1, use_1x1conv=False):
