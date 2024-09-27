@@ -2,15 +2,13 @@ import random
 import argparse
 import datetime
 import os
-import logging
 import tqdm
 import wandb
 
 import numpy as np
 
 import torch
-from torch import nn
-from torch import optim
+from torch import nn, optim
 from torch.utils.data import DataLoader
 
 from dataset import *
@@ -27,7 +25,7 @@ def set_random_seed(seed=0):
 def train(args):
 
     # 设置wandb
-    wandb.init(project='Kaggle: Classify Leaves', config=args)
+    wandb.init(project='Classify Leaves', config=args)
     wandb.run.name = 'ResNet_custom'
     wandb.run.save()
 
@@ -50,14 +48,14 @@ def train(args):
     criterion = nn.CrossEntropyLoss()
 
     # 训练循环
-    for epoch_id in range(args.num_epochs):
+    for epoch_id in range(args.epochs):
 
         model.train()
         model.train()
         running_loss = 0.0
         correct_predictions = 0
         total_predictions = 0
-        print(f'Starting training for epoch {epoch_id + 1}')
+        print(f'Starting training for epoch {epoch_id}')
 
         for batch in tqdm(train_iter):
 
@@ -82,7 +80,7 @@ def train(args):
         # 计算训练集平均损失和准确率
         train_loss = running_loss / len(trainset)
         train_accuracy = correct_predictions / total_predictions
-        print(f'Epoch {epoch_id + 1}, Train Loss: {train_loss:.4f}, Train Accuracy: {train_accuracy:.4f}')
+        print(f'Epoch {epoch_id}, Train Loss: {train_loss:.4f}, Train Accuracy: {train_accuracy:.4f}')
 
         # 验证模式
         model.eval()
@@ -109,26 +107,25 @@ def train(args):
         # 计算指标
         valid_loss /= len(validset)
         valid_accuracy = valid_correct / valid_total
-        print(f'Epoch {epoch_id + 1}, Valid Loss: {valid_loss:.4f}, Valid Accuracy: {valid_accuracy:.4f}')
+        print(f'Epoch {epoch_id}, Valid Loss: {valid_loss:.4f}, Valid Accuracy: {valid_accuracy:.4f}')
 
         # 记录到wandb中
         wandb.log({
             'Train Loss': train_loss,
-            'Valid Loss': valid_loss
-        })
-        wandb.log({
+            'Valid Loss': valid_loss,
             'Train Accuracy': train_accuracy,
-            'Valid Accuracy': valid_accuracy
+            'Valid Accuracy': valid_accuracy,
+            'Epoch': epoch_id
         })
 
         # 保存模型到WandB
-        torch.save(model.state_dict(), f'model_epoch_{epoch_id + 1}.pth')
-        wandb.save(f'model_epoch_{epoch_id + 1}.pth')
+        current_time = datetime.datetime.now()
+        model_save_path = os.path.join(wandb.run.dir, f'model_{current_time.strftime("%Y_%m_%d_%H_%M_%S")}_epoch{epoch_id}.pth')
+        torch.save(model.state_dict(), model_save_path)
+        wandb.save(model_save_path)
 
         # 调度器更新
         scheduler.step()
-
-        
 
 if __name__ == '__main__':
 
@@ -139,7 +136,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_workers', type=int, default=2)
     parser.add_argument('--cuda', type=int, default=0)
     parser.add_argument('--learning_rate', type=float, default=3e-4)
-    parser.add_argument('--weight_dacay', type=float, default=1e-3)
+    parser.add_argument('--weight_decay', type=float, default=1e-3)
     parser.add_argument('--seed', type=int, default=3407)
     args = parser.parse_args()
 

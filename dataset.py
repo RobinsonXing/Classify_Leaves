@@ -9,11 +9,19 @@ from torchvision import transforms
 
 class LeavesDataset(Dataset):
     """读取数据集"""
-    def __init__(self, csv_path,
+    def __init__(self,
                  valid_ratio=0.2, resize_height=224, resize_width=224,
                  mode: Literal['train', 'valid', 'test']='train'):
 
         # 读取数据集
+        def load_path(mode):
+            path_dict = {
+                'train': './dataset/train.csv',
+                'valid': './dataset/train.csv',
+                'test': './dataset/test.csv'
+            }
+            return path_dict.get(mode, 'Invalid mode')
+        csv_path = load_path(mode)
         self.data = pd.read_csv(csv_path, header=None)
 
         # 计算验证集长度
@@ -55,8 +63,9 @@ class LeavesDataset(Dataset):
             data = pd.read_csv('./dataset/train.csv')
             unique_labels = sorted(list(data['label'].unique()))
             return dict(zip(unique_labels, range(len(unique_labels))))
-        self.calss2num = load_calss2num()
+        self.class2num = load_calss2num()
         self.num2class = {v : k for k, v in self.calss2num.items()}
+        self.num_classes = len(self.class2num)
 
     def __len__(self):
         return len(self.image_arr)
@@ -67,5 +76,5 @@ class LeavesDataset(Dataset):
         if self.mode == 'test':
             return image
         else:
-            label_num = self.calss2num[self.label_arr[index]]
+            label_num = self.class2num[self.label_arr[index]]
             return image, label_num
