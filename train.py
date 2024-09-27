@@ -39,7 +39,7 @@ def train(args):
     device = torch.device(f'cuda:{args.cuda}' if torch.cuda.is_available() else 'cpu')
 
     # 实例化ResNet，加载至GPU上
-    model = get_custom_ResNet(trainset.num_classes)
+    model = get_custom_ResNet(input_channels=3 , num_classes=trainset.num_classes)
     model = model.to(device)
 
     # 优化器、学习率调度器、损失函数
