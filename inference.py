@@ -40,7 +40,7 @@ def infer(args):
     preds_str = [testset.num2class[i] for i in iter(preds)]
 
     # 保存并输出结果
-    submission = pd.read_csv('./dataset/submission_sample.csv')
+    submission = pd.read_csv('./dataset/sample_submission.csv')
     assert len(submission['label']) == len(preds_str)
     submission['label'] = preds_str
     submission.to_csv(result_path + result_name, index=False)
