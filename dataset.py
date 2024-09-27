@@ -9,7 +9,7 @@ from torchvision import transforms
 
 class LeavesDataset(Dataset):
     """读取数据集"""
-    def __init__(self, csv_path, num_classes,
+    def __init__(self, csv_path,
                  valid_ratio=0.2, resize_height=224, resize_width=224,
                  mode: Literal['train', 'valid', 'test']='train'):
 
@@ -50,6 +50,7 @@ class LeavesDataset(Dataset):
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
         
+        # 标签编码
         def load_calss2num():
             data = pd.read_csv('./dataset/train.csv')
             unique_labels = sorted(list(data['label'].unique()))

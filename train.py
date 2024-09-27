@@ -32,7 +32,7 @@ def train(args):
     wandb.run.save()
 
     # 加载训练集
-    dataset_train = Trainset()
+    dataset_train = LeavesDataset()
     dataloader_train = DataLoader(dataset_train, batch_size=args.batch_size, shuffle=True)
 
     # 通过cuda:<device_id>指定训练用的GPU
