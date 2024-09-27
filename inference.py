@@ -25,6 +25,7 @@ def infer(args):
 
     # 实例化ResNet，加载训练好的模型
     model = get_custom_ResNet(input_channels=3 , num_classes=testset.num_classes)
+    model.to(device)
     model.load_state_dict(torch.load(args.pth_file, map_location=device))
 
     # 验证模式
