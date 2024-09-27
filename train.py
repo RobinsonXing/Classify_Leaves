@@ -6,7 +6,6 @@ import wandb
 from tqdm import tqdm
 
 import numpy as np
-
 import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader

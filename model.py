@@ -33,7 +33,7 @@ def get_custom_ResNet(input_channels, num_classes):
                      num_residuals, first_block=False):
         blk = []
         for i in range(num_residuals):
-            if i == 0 and first_block:
+            if i == 0 and not first_block:
                 blk.append(Residual(input_channels, num_channels,
                                     strides=2, use_1x1conv=True))
             else:
@@ -45,10 +45,14 @@ def get_custom_ResNet(input_channels, num_classes):
                        nn.BatchNorm2d(64),
                        nn.ReLU(),
                        nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
-    b2 = nn.Sequential(*resnet_block(64, 64, 2, first_block=True), nn.Dropout())
-    b3 = nn.Sequential(*resnet_block(64, 128, 2), nn.Dropout())
-    b4 = nn.Sequential(*resnet_block(128, 256, 2), nn.Dropout())
-    b5 = nn.Sequential(*resnet_block(256, 512, 2), nn.Dropout())
+    b2 = nn.Sequential(*resnet_block(64, 64, 2, first_block=True), 
+                       nn.Dropout())
+    b3 = nn.Sequential(*resnet_block(64, 128, 2), 
+                       nn.Dropout())
+    b4 = nn.Sequential(*resnet_block(128, 256, 2), 
+                       nn.Dropout())
+    b5 = nn.Sequential(*resnet_block(256, 512, 2), 
+                       nn.Dropout())
 
     net = nn.Sequential(b1, b2, b3, b4, b5,
                         nn.AdaptiveAvgPool2d((1, 1)),
