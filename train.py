@@ -31,8 +31,8 @@ def train(args):
     # 加载训练集和验证集
     trainset = LeavesDataset(mode='train')
     validset = LeavesDataset(mode='valid')
-    train_iter = DataLoader(trainset, batch_size=args.batch_size, shuffle=True)
-    valid_iter = DataLoader(validset, batch_size=args.batch_size, shuffle=False)
+    train_iter = DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
+    valid_iter = DataLoader(validset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
 
     # 指定训练用的设备
     device = torch.device(f'cuda:{args.cuda}' if torch.cuda.is_available() else 'cpu')
