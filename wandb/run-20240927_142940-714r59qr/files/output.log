@@ -1,0 +1,10 @@
+[34m[1mwandb[39m[22m: [33mWARNING[39m Calling wandb.run.save without any arguments is deprecated.Changes to attributes are automatically persisted.
+Traceback (most recent call last):
+  File "/Users/robinsonxing/Documents/Code Source/kaggle/Classify_Leaves/train.py", line 144, in <module>
+    train(args)
+  File "/Users/robinsonxing/Documents/Code Source/kaggle/Classify_Leaves/train.py", line 33, in train
+    trainset = LeavesDataset(mode='train')
+  File "/Users/robinsonxing/Documents/Code Source/kaggle/Classify_Leaves/dataset.py", line 67, in __init__
+    self.num2class = {v : k for k, v in self.calss2num.items()}
+AttributeError: 'LeavesDataset' object has no attribute 'calss2num'
+Finished loading the trainset with 14683 datarow.

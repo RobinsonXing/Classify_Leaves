@@ -64,7 +64,7 @@ class LeavesDataset(Dataset):
             unique_labels = sorted(list(data['label'].unique()))
             return dict(zip(unique_labels, range(len(unique_labels))))
         self.class2num = load_calss2num()
-        self.num2class = {v : k for k, v in self.calss2num.items()}
+        self.num2class = {v : k for k, v in self.class2num.items()}
         self.num_classes = len(self.class2num)
 
     def __len__(self):
