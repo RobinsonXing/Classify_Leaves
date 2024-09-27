@@ -2,8 +2,8 @@ import random
 import argparse
 import datetime
 import os
-import tqdm
 import wandb
+from tqdm import tqdm
 
 import numpy as np
 
@@ -43,7 +43,7 @@ def train(args):
     model = model.to(device)
 
     # 优化器、学习率调度器、损失函数
-    optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
+    optimizer = optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
     criterion = nn.CrossEntropyLoss()
 
